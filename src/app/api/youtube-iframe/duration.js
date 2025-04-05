@@ -4,6 +4,8 @@
  * YouTube動画の長さを取得するAPIエンドポイント
  */
 
+import { setStoredVideoLength } from "@/lib/store";
+
 // YouTube IFrame Player APIを読み込む
 const loadYouTubeIframeAPI = () => {
   return new Promise((resolve) => {
@@ -71,12 +73,10 @@ const fetchVideoLength = async (videoId, setVideoLength, setLoading) => {
 
     // 動画の長さを取得
     const duration = await getVideoDuration(videoId);
-
-    // 状態を更新
     setVideoLength(duration);
 
-    // オプション: ローカルストレージに保存
-    localStorage.setItem(`videoLength_${videoId}`, duration.toString());
+    // 動画の長さを共有変数に保存
+    setStoredVideoLength(duration);
   } catch (error) {
     console.error('動画の長さの取得に失敗しました:', error);
     alert('動画の長さの取得に失敗しました。');

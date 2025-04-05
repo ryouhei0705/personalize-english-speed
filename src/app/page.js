@@ -25,7 +25,7 @@ export default function Home() {
     const id = extractVideoId(url);
     setVideoId(id);
   };
-  
+
   // 字幕取得ボタンがクリックされたときの処理
   const handleFetchVideoInfo = async () => {
     if (!videoId) {
