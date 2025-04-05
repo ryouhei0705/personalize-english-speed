@@ -32,6 +32,7 @@ type GeminiApiResponse = {
   }
   
   export default async function Home() {
+    const transcriptStore = ""
     const prompt = '以下のかっこの中にある文字数をカウントして、教えてください「あああああ」'; // AI に送信するプロンプト
     const message = await getData(prompt); // プロンプトを引数として渡す
   
