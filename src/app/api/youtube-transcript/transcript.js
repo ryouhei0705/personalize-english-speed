@@ -14,6 +14,7 @@ const fetchTranscript = async (videoId, setTranscript, setLoading) => {
     const data = await response.json();
 
     if (response.ok) {
+      //  文字起こしを取得，整形し，共有変数に保存
       const transcriptText = editTranscript(data.transcript);
       setTranscript(transcriptText);
       setStoredTranscript(transcriptText);

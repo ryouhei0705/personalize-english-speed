@@ -1,5 +1,4 @@
 // src/lib/store.js
-// 簡易的なインメモリストア
 
 let transcriptStore = '';
 

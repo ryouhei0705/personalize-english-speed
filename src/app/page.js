@@ -5,9 +5,10 @@ import { fetchTranscript } from './api/youtube-transcript/transcript';
 
 export default function Home() {
   const [videoId, setVideoId] = useState('');
-  const [transcript, setTranscript] = useState('');
   const [loading, setLoading] = useState(false);
+  const [transcript, setTranscript] = useState(''); //  取得した字幕を格納する状態
 
+  //  字幕取得ボタンがクリックされたときの処理
   const handleFetchTranscript = () => {
     fetchTranscript(videoId, setTranscript, setLoading);
   };
@@ -23,7 +24,7 @@ export default function Home() {
         style={{ width: '90%', marginRight: '10px', color: '#000000' }}
       />
       <button
-        onClick={handleFetchTranscript}
+        onClick={handleFetchTranscript} //  ボタンがクリックされたときにhandleFetchTranscriptを呼び出す
         disabled={loading}
         style={{
           backgroundColor: '#0070f3',
