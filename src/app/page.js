@@ -5,22 +5,13 @@ import React, {useState} from "react";
 export default function Home() {
   // TOEICスコア
   const [toeic, setToeic] = useState(1);
-  // 適正発話速度
-  // const [speed, setSpeed] = useState(1);
   // 動画のURL
   const [url, setUrl] = useState('https://www.youtube.com/watch?v=00NgUctWoLQ');
   // 再生倍率,0.25~2.00の0.05刻み
   const [rate, setRate] = useState(1.0);
 
   // apiのurl
-  const API_URL = '/api/test'
-
-  // 入力に合わせて，トイックスコアから適正発話速度を計算する
-  // const onCalculateSpeed = (event) => {
-  //   // トイックスコアから適正発話速度を計算
-  //   const newSpeed = Math.floor(event.target.value * 1/ 10 + 70)
-  //   setSpeed(newSpeed)
-  // }
+  const API_URL = '/api/WPMcalculate'
 
   // 入力に合わせて，TOEICスコアを更新する
   const onChangeToeic = (event) => {
@@ -52,7 +43,6 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <h1>あなたのTOEICスコアと動画URLを入力してください</h1>
-      {/* <label>TOEICスコア：<input type="text" onChange={onCalculateSpeed}/></label> */}
       <label>TOEICスコア：<input type="text" onChange={onChangeToeic}/></label>
       <label>動画URL：<input type="text" onChange={onChangeUrl}/></label>
       <button type="submit" onClick={calculateRate}>再生倍率を計算</button>
