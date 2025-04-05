@@ -1,3 +1,9 @@
+/**
+ * src/app/api/youtube-transcript/route.js
+ *
+ * YouTube動画の字幕を取得するAPIエンドポイント
+ */
+
 import { YoutubeTranscript } from 'youtube-transcript';
 
 export async function GET(req) {

@@ -1,28 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import { fetchTranscript } from './api/youtube-transcript/transcript';
 
 export default function Home() {
   const [videoId, setVideoId] = useState('');
   const [transcript, setTranscript] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const fetchTranscript = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/transcript?videoId=${videoId}`);
-      const data = await response.json();
-
-      if (response.ok) {
-        setTranscript(data.transcript);
-      } else {
-        alert(data.error || '字幕の取得に失敗しました。');
-      }
-    } catch (error) {
-      console.error(error);
-      alert('エラーが発生しました。');
-    }
-    setLoading(false);
+  const handleFetchTranscript = () => {
+    fetchTranscript(videoId, setTranscript, setLoading);
   };
 
   return (
@@ -30,12 +17,14 @@ export default function Home() {
       <h1>YouTube文字起こしテスト</h1>
       <input
         type="text"
-        placeholder="YouTube動画IDを入力"
+        placeholder="YouTube動画URLを入力"
         value={videoId}
         onChange={(e) => setVideoId(e.target.value)}
-        style={{ width: '300px', marginRight: '10px', color: '#000000', width: '90%'}}
+        style={{ width: '90%', marginRight: '10px', color: '#000000' }}
       />
-      <button onClick={fetchTranscript} disabled={loading}
+      <button
+        onClick={handleFetchTranscript}
+        disabled={loading}
         style={{
           backgroundColor: '#0070f3',
           color: '#ffffff',
