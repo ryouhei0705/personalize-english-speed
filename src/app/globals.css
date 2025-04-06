@@ -5,12 +5,12 @@
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --background-end-rgb:105, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
+    --foreground-rgb: 205, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
@@ -24,4 +24,82 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+}
+
+h1 {
+  font-size: 30px;
+  font-weight: 700;
+  position: relative;
+  padding: 1rem 2rem calc(1rem + 8px);
+  background: #fff;
+  text-align: center;
+}
+
+h1:before {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 100%;
+  height: 100%;
+  content: '';
+  border: 4px solid #000;
+}
+
+label {
+  font-size: 25px;
+  font-weight: 700;
+  padding: 1rem 3rem;
+  color: #fff;
+  border-radius: 100vh;
+  background-image: -webkit-gradient(linear, right top, left top, from(#9be15d), to(#00e3ae));
+  background-image: -webkit-linear-gradient(right, #9be15d 0%, #00e3ae 100%);
+  background-image: linear-gradient(to left, #9be15d 0%, #00e3ae 100%);
+}
+input {
+  font-size: 20px;
+  font-weight: 350;
+  color: #000;
+  background: #fff;
+  -webkit-box-shadow: 5px 5px 0 #007032;
+  box-shadow: 5px 5px 0 #007032;
+}
+button {
+  font-size: 20px;
+  font-weight: 700;
+    padding: 1rem 2rem;
+    color: #fff;
+    background: #094;
+    -webkit-box-shadow: 5px 5px 0 #007032;
+    box-shadow: 5px 5px 0 #007032;
+}
+
+p {
+  font-size: 30px;
+  font-weight: 1000;
+  position: relative;
+  padding: 1rem .5rem;
+  color: #fff;
+  border-radius: 10px;
+  background-image: -webkit-linear-gradient(315deg, #231557 0%, #44107a 29%, #a10f40 67%, #817f41 100%);
+  background-image: linear-gradient(-225deg, #231557 0%, #44107a 29%, #a10f40 67%, #817f41 100%)
+}
+
+p:after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  content: '';
+  border-radius: 3px;
+  background-image: -webkit-gradient(linear, right top, left top, from(#2af598), to(#009efd));
+  background-image: -webkit-linear-gradient(right, #2af598 0%, #009efd 100%);
+  background-image: linear-gradient(to left, #2af598 0%, #009efd 100%);
+}
+
+p span {
+  display: block;
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, .2);
 }
