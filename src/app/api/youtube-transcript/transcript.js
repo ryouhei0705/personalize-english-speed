@@ -4,7 +4,7 @@
  * YouTube動画の文字起こしに関する関数
  */
 
-import { setStoredTranscript } from '@/lib/store';
+import { setStoredTranscript, setStoredTranscriptLength } from '@/lib/store';
 
 //  文字起こしを取得
 const fetchTranscript = async (videoId, setTranscript, setLoading) => {
@@ -15,9 +15,11 @@ const fetchTranscript = async (videoId, setTranscript, setLoading) => {
 
     if (response.ok) {
       //  文字起こしを取得，整形し，共有変数に保存
+      //  文字数も保存
       const transcriptText = editTranscript(data.transcript);
       setTranscript(transcriptText);
       setStoredTranscript(transcriptText);
+      setStoredTranscriptLength(getTranscriptLength(transcriptText));
     } else {
       alert(data.error || '文字起こしの取得に失敗しました．');
     }
@@ -34,6 +36,11 @@ const editTranscript = (transcript) => {
     .replaceAll('&amp;#39;', '\'')
     .replaceAll(/\[[^\]]*\]/g, '');
 }
+
+//  文字起こしの文字数を取得
+const getTranscriptLength = (transcript) => {
+  return transcript.length;
+};
 
 export { editTranscript };
 export { fetchTranscript };
