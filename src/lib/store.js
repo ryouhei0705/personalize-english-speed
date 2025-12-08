@@ -1,8 +1,8 @@
 // src/lib/store.js
 
 let transcriptStore = ''; // 文字起こしの保存
-let transcriptLength = 0; // 文字起こしの長さの保存
-let videoLength = 0;      // 動画の長さの保存
+let transcriptLength = 100; // 文字起こしの長さの保存
+let videoLength = 100;      // 動画の長さの保存
 
 export function setStoredTranscript(text) {
   transcriptStore = text;

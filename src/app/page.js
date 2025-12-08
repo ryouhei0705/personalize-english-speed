@@ -1,77 +1,77 @@
 'use client';
 
 // 宮坂main
-import { useState } from 'react';
-import { fetchTranscript } from './api/youtube-transcript/transcript';
-import { fetchVideoLength } from './api/youtube-iframe/duration';
+// import { useState } from 'react';
+// import { fetchTranscript } from './api/youtube-transcript/transcript';
+// import { fetchVideoLength } from './api/youtube-iframe/duration';
 
-export default function Home() {
-  const [videoUrl, setVideoUrl] = useState('');
-  const [videoId, setVideoId] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [transcript, setTranscript] = useState(''); // 取得した字幕を格納する状態
-  const [videoLength, setVideoLength] = useState(0); // 動画の長さを格納する状態
+// export default function Home() {
+//   const [videoUrl, setVideoUrl] = useState('');
+//   const [videoId, setVideoId] = useState('');
+//   const [loading, setLoading] = useState(false);
+//   const [transcript, setTranscript] = useState(''); // 取得した字幕を格納する状態
+//   const [videoLength, setVideoLength] = useState(0); // 動画の長さを格納する状態
 
-  // URLから動画IDを抽出する関数
-  const extractVideoId = (url) => {
-    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n]{11})/;
-    const match = url.match(regex);
-    return match ? match[1] : null;
-  };
+  // // URLから動画IDを抽出する関数
+  // const extractVideoId = (url) => {
+  //   const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n]{11})/;
+  //   const match = url.match(regex);
+  //   return match ? match[1] : null;
+  // };
 
-  // URL入力時の処理
-  const handleUrlChange = (e) => {
-    const url = e.target.value;
-    setVideoUrl(url);
-    const id = extractVideoId(url);
-    setVideoId(id);
-  };
+  // // URL入力時の処理
+  // const handleUrlChange = (e) => {
+  //   const url = e.target.value;
+  //   setVideoUrl(url);
+  //   const id = extractVideoId(url);
+  //   setVideoId(id);
+  // };
 
-  // 字幕取得ボタンがクリックされたときの処理
-  const handleFetchVideoInfo = async () => {
-    if (!videoId) {
-      alert('有効なYouTube URLを入力してください。');
-      return;
-    }
-    // 動画IDが取得できた場合、字幕を取得
-    await fetchTranscript(videoId, setTranscript, setLoading);
-    // 動画の長さを取得
-    await fetchVideoLength(videoId, setVideoLength, setLoading);
-  };
+  // // 字幕取得ボタンがクリックされたときの処理
+  // const handleFetchVideoInfo = async () => {
+  //   if (!videoId) {
+  //     alert('有効なYouTube URLを入力してください。');
+  //     return;
+  //   }
+  //   // 動画IDが取得できた場合、字幕を取得
+  //   await fetchTranscript(videoId, setTranscript, setLoading);
+  //   // 動画の長さを取得
+  //   await fetchVideoLength(videoId, setVideoLength, setLoading);
+  // };
 
-  return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif', margin: '0 auto' }}>
+  // return (
+  //   <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif', margin: '0 auto' }}>
 
-      <h1>YouTube文字起こし＆時間取得テスト</h1>
+  //     <h1>YouTube文字起こし＆時間取得テスト</h1>
 
-      <div style={{ marginBottom: '20px' }}>
-        <input
-          type="text"
-          placeholder="YouTube動画URLを入力"
-          value={videoUrl}
-          onChange={handleUrlChange}
-          style={{
-            color: 'black',
-            width: '100%',
-          }}
-        />
+  //     <div style={{ marginBottom: '20px' }}>
+  //       <input
+  //         type="text"
+  //         placeholder="YouTube動画URLを入力"
+  //         value={videoUrl}
+  //         onChange={handleUrlChange}
+  //         style={{
+  //           color: 'black',
+  //           width: '100%',
+  //         }}
+  //       />
 
-        <button onClick={handleFetchVideoInfo} disabled={loading || !videoId}
-          style={{
-            marginLeft: '10px',
-            marginTop: '20px',
-            padding: '10px 20px',
-            backgroundColor: loading ? '#ccc' : '#007bff',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: loading ? 'not-allowed' : 'pointer'
-          }}>
-          {loading ? '取得中...' : '動画情報を取得'}
-        </button>
-      </div>
+  //       <button onClick={handleFetchVideoInfo} disabled={loading || !videoId}
+  //         style={{
+  //           marginLeft: '10px',
+  //           marginTop: '20px',
+  //           padding: '10px 20px',
+  //           backgroundColor: loading ? '#ccc' : '#007bff',
+  //           color: '#fff',
+  //           border: 'none',
+  //           borderRadius: '5px',
+  //           cursor: loading ? 'not-allowed' : 'pointer'
+  //         }}>
+  //         {loading ? '取得中...' : '動画情報を取得'}
+  //       </button>
+  //     </div>
 
-      <div>
+      {/* <div>
         <h3>動画の長さ:</h3>
         <p>
           {videoLength ? `${videoLength}秒` : '読み込み中...'}
@@ -79,11 +79,16 @@ export default function Home() {
 
         <h3>字幕:</h3>
         <p>{transcript || '字幕データが利用できません。'}</p>
-      </div>
-    </div>
-  );
+      </div> */}
+    {/* </div>
+  ); */}
 // 清水main
 import React, {useState} from "react";
+
+import { fetchTranscript } from './api/youtube-transcript/transcript';
+import { fetchVideoLength } from './youtube-iframe/duration';
+
+import { getStoredTranscriptLength, getStoredVideoLength } from '../lib/store';
 
 export default function Home() {
   // TOEICスコア
@@ -92,6 +97,12 @@ export default function Home() {
   const [url, setUrl] = useState('https://www.youtube.com/watch?v=00NgUctWoLQ');
   // 再生倍率,0.25~2.00の0.05刻み
   const [rate, setRate] = useState(1.0);
+
+//   const [videoUrl, setVideoUrl] = useState('');
+//   const [videoId, setVideoId] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [transcriptLength, setTranscriptLength] = useState(0); // 動画の文字数
+  const [videoLength, setVideoLength] = useState(0); // 動画の長さ(秒)
 
   // apiのurl
   const API_URL = '/api/WPMcalculate'
@@ -108,13 +119,43 @@ export default function Home() {
 
   // ボタンを押すと適正発話速度と動画のURLを渡して，計算された倍率を受け取る
   const calculateRate = async () => {
-    // setRate(speed + url)
+    // URLから動画IDを抽出する関数
+    const extractVideoId = (url) => {
+      const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n]{11})/;
+      const match = url.match(regex);
+      return match ? match[1] : null;
+    };
+    
+
+    
+      
+    
 
     try {
-      // クエリパラメータを作成
-      const params = new URLSearchParams({url, toeic}).toString();
-      const res = await fetch(`${API_URL}?${params}`,{method: 'GET'})
+      // urlから動画IDを抽出
+      const videoId = extractVideoId(url);
 
+      // 動画IDが取得できなかった場合
+      if (!videoId) {
+        alert('有効なYouTube URLを入力してください。');
+        return;
+      }
+      // 動画IDが取得できた場合、動画の文字起こしの文字数を取得
+      const newTranscriptLength = await fetchTranscript(videoId)
+      setTranscriptLength(newTranscriptLength)//, setTranscript);
+
+      console.log("transcriptLength in page", transcriptLength)
+      
+      // 動画IDが取得できた場合、動画の長さ(秒)を取得
+      const newVideoLength = await fetchVideoLength(videoId)
+      setVideoLength(newVideoLength)//, setVideoLength);
+      
+      console.log("transcriptLength in page", transcriptLength)
+      console.log("videoLength in page", videoLength)
+      // クエリパラメータを作成
+      const params = new URLSearchParams({transcriptLength, videoLength, toeic}).toString();
+      const res = await fetch(`${API_URL}?${params}`,{method: 'GET'})
+ 
       // レスポンスをJSONとして取得
       const data = await res.json()
       setRate(data.rate)
