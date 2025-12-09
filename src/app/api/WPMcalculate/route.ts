@@ -3,10 +3,10 @@ import { NextResponse } from 'next/server';
 
 import {getStoredTranscriptLength, getStoredVideoLength} from '../../../lib/store';
 
-export const corsHeaders = {
-  'Access-Control-Allow-Origin': 'http://localhost:3000', // 許可するオリジン
+const corsHeaders = {
+  'Access-Control-Allow-Origin': 'https://personalize-english-speed.vercel.app', // 許可するオリジン，本番
+  // 'Access-Control-Allow-Origin': 'localhost:3000', // 許可するオリジン，開発時
   'Access-Control-Allow-Methods': 'GET', // 許可するメソッド
-  'Access-Control-Allow-Headers': 'Content-Type', // 許可するリクエストヘッダー
 }
 
 export async function GET(req) {
