@@ -10,10 +10,10 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.0",
-    "next": "^15.2.4",
+    "next": "^16.0.8",
     "node": "^23.11.0",
-    "react": "^18",
-    "react-dom": "^18",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
     "youtube-transcript": "^1.2.1"
   },
   "devDependencies": {
