@@ -1,96 +1,12 @@
 'use client';
 
-// 宮坂main
-// import { useState } from 'react';
-// import { fetchTranscript } from './api/youtube-transcript/transcript';
-// import { fetchVideoLength } from './api/youtube-iframe/duration';
-
-// export default function Home() {
-//   const [videoUrl, setVideoUrl] = useState('');
-//   const [videoId, setVideoId] = useState('');
-//   const [loading, setLoading] = useState(false);
-//   const [transcript, setTranscript] = useState(''); // 取得した字幕を格納する状態
-//   const [videoLength, setVideoLength] = useState(0); // 動画の長さを格納する状態
-
-  // // URLから動画IDを抽出する関数
-  // const extractVideoId = (url) => {
-  //   const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n]{11})/;
-  //   const match = url.match(regex);
-  //   return match ? match[1] : null;
-  // };
-
-  // // URL入力時の処理
-  // const handleUrlChange = (e) => {
-  //   const url = e.target.value;
-  //   setVideoUrl(url);
-  //   const id = extractVideoId(url);
-  //   setVideoId(id);
-  // };
-
-  // // 字幕取得ボタンがクリックされたときの処理
-  // const handleFetchVideoInfo = async () => {
-  //   if (!videoId) {
-  //     alert('有効なYouTube URLを入力してください。');
-  //     return;
-  //   }
-  //   // 動画IDが取得できた場合、字幕を取得
-  //   await fetchTranscript(videoId, setTranscript, setLoading);
-  //   // 動画の長さを取得
-  //   await fetchVideoLength(videoId, setVideoLength, setLoading);
-  // };
-
-  // return (
-  //   <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif', margin: '0 auto' }}>
-
-  //     <h1>YouTube文字起こし＆時間取得テスト</h1>
-
-  //     <div style={{ marginBottom: '20px' }}>
-  //       <input
-  //         type="text"
-  //         placeholder="YouTube動画URLを入力"
-  //         value={videoUrl}
-  //         onChange={handleUrlChange}
-  //         style={{
-  //           color: 'black',
-  //           width: '100%',
-  //         }}
-  //       />
-
-  //       <button onClick={handleFetchVideoInfo} disabled={loading || !videoId}
-  //         style={{
-  //           marginLeft: '10px',
-  //           marginTop: '20px',
-  //           padding: '10px 20px',
-  //           backgroundColor: loading ? '#ccc' : '#007bff',
-  //           color: '#fff',
-  //           border: 'none',
-  //           borderRadius: '5px',
-  //           cursor: loading ? 'not-allowed' : 'pointer'
-  //         }}>
-  //         {loading ? '取得中...' : '動画情報を取得'}
-  //       </button>
-  //     </div>
-
-      {/* <div>
-        <h3>動画の長さ:</h3>
-        <p>
-          {videoLength ? `${videoLength}秒` : '読み込み中...'}
-        </p>
-
-        <h3>字幕:</h3>
-        <p>{transcript || '字幕データが利用できません。'}</p>
-      </div> */}
-    {/* </div>
-  ); */}
-// 清水main
 import React, {useState} from "react";
 
-import { fetchTranscript } from './api/youtube-transcript/transcript';
 import { fetchVideoLength } from './youtube-iframe/duration';
 
-import { getStoredTranscriptLength, getStoredVideoLength } from '../lib/store';
-
 export default function Home() {
+  // エラーメッセージ
+  const [errorMessage, setErrorMessage] = useState("");
   // TOEICスコア
   const [toeic, setToeic] = useState(1);
   // 動画のURL
@@ -98,8 +14,6 @@ export default function Home() {
   // 再生倍率,0.25~2.00の0.05刻み
   const [rate, setRate] = useState(1.0);
 
-//   const [videoUrl, setVideoUrl] = useState('');
-//   const [videoId, setVideoId] = useState('');
   const [loading, setLoading] = useState(false);
   const [transcriptLength, setTranscriptLength] = useState(0); // 動画の文字数
   const [videoLength, setVideoLength] = useState(0); // 動画の長さ(秒)
@@ -119,17 +33,15 @@ export default function Home() {
 
   // ボタンを押すと適正発話速度と動画のURLを渡して，計算された倍率を受け取る
   const calculateRate = async () => {
+    // エラーメッセージをリセット
+    setErrorMessage(""); 
+
     // URLから動画IDを抽出する関数
     const extractVideoId = (url) => {
       const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^&\n]{11})/;
       const match = url.match(regex);
       return match ? match[1] : null;
     };
-    
-
-    
-      
-    
 
     try {
       // urlから動画IDを抽出
@@ -140,18 +52,42 @@ export default function Home() {
         alert('有効なYouTube URLを入力してください。');
         return;
       }
-      // 動画IDが取得できた場合、動画の文字起こしの文字数を取得
-      const newTranscriptLength = await fetchTranscript(videoId)
-      setTranscriptLength(newTranscriptLength)//, setTranscript);
-
-      console.log("transcriptLength in page", transcriptLength)
       
       // 動画IDが取得できた場合、動画の長さ(秒)を取得
       const newVideoLength = await fetchVideoLength(videoId)
       setVideoLength(newVideoLength)//, setVideoLength);
+
+      console.log("videoLength in page", newVideoLength)
+
+      if(newVideoLength > 600)
+      {
+        // 動画時間が10分(600秒)超えていた時，表示して終わらせる
+        setErrorMessage("動画時間は10分以内にしてください");
+        return;
+      }
+
+      // 動画IDが取得できた場合、動画の文字起こしの文字数を取得，約10分以内である必要がある
+      const responseTranscriptLengthAPI = await fetch(`/api/youtube-transcript/?videoId=${videoId}`,{
+        method: 'GET',
+      })
+      // ステータスコードで分岐する
+      if (responseTranscriptLengthAPI.status === 429) {
+        // apiの無料枠が終了した時
+        setErrorMessage("本日のAI利用枠を超えました。明日また来てください");
+        return; // ここで終了
+      }
+
+      if (!responseTranscriptLengthAPI.ok) {
+        // 429以外のエラー（500など）
+        setErrorMessage("エラーが発生しました。時間を置いて試してください。");
+        return;
+      }
+
+      const newTranscriptLength = responseTranscriptLengthAPI.json().length;
+      setTranscriptLength(newTranscriptLength)//, setTranscript);
       
-      console.log("transcriptLength in page", transcriptLength)
-      console.log("videoLength in page", videoLength)
+      console.log("transcriptLength in page", newTranscriptLength)
+
       // クエリパラメータを作成
       const params = new URLSearchParams({transcriptLength, videoLength, toeic}).toString();
       const res = await fetch(`${API_URL}?${params}`,{method: 'GET'})
@@ -166,12 +102,19 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1>あなたのTOEICスコアと動画URLを入力してください</h1>
+      <h1>あなたのTOEICスコアと10分以内の動画の動画URLを入力してください</h1>
       <label>TOEICスコア：<input type="text" onChange={onChangeToeic}/></label>
       <label>動画URL：<input type="text" onChange={onChangeUrl}/></label>
       <button type="submit" onClick={calculateRate}>再生倍率を計算</button>
 
       <p>再生倍率：{rate}</p>
+
+      {/* エラーがあれば赤文字で表示 */}
+      {errorMessage && (
+        <p style={{ color: 'red', fontWeight: 'bold' }}>
+          {errorMessage}
+        </p>
+      )}
     </main>
   )
 }

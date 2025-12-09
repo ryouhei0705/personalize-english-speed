@@ -17,27 +17,36 @@ export async function GET(req) {
     const toeicScore: number = req.nextUrl.searchParams.get('toeic'); // TOEICスコア
     
     // TOEICスコアから推奨WPM（Words Per Minute：1分あたりの単語数）を算出
-    // 計算式：推奨WPM = TOEICスコア / 10 + 70
-    const appropriateWPM = toeicScore / 10 + 70 
+    // 計算式：推奨WPM = TOEICスコア / 10 + 60
+    const appropriateWPM: number = toeicScore / 10 + 60 
+
+    console.log("appropriateWPM in WPMcalculate", appropriateWPM);
 
     // 動画の文字数と長さが0の場合は再生速度の倍率を0とする
     if (transcriptLength === 0 || videoLength === 0) {
-        return NextResponse.json({ rate: 0 });
+      return NextResponse.json({ rate: 0 });
     }
 
-    const videoWPM = transcriptLength/videoLength * 60 //動画のWPM
+    const videoWPM: number = (60 * transcriptLength)/videoLength //動画のWPM
 
-    let playBackRate = appropriateWPM/videoWPM  // 再生速度の倍率を算出
+    console.log("videoWPM in WPMcalculate", videoWPM);
+
+    let playBackRate: number = appropriateWPM/videoWPM  // 再生速度の倍率を算出
+    
+    console.log("playBackRate in WPMcalculate", playBackRate);
+
     // 再生速度の倍率を0.05刻みに調整
-    const remainder = playBackRate % 0.05 // 0.05で割った余りを計算
+    const remainder: number = playBackRate % 0.05 // 0.05で割った余りを計算
+    console.log("remainder in WPMcalculate", remainder);
     // 余りが0.025以上の場合は切り上げ、それ以外は切り捨て
     if (remainder >= 0.025) {
-        playBackRate += 0.05 - remainder;// 切り上げ
-        } else {
-          playBackRate -= remainder;// 切り捨て
-        }
+      playBackRate += 0.05 - remainder;// 切り上げ
+      } else {
+        playBackRate -= remainder;// 切り捨て
+      }
+
     // 小数点2桁以下の数が余ることがあるので、小数点2桁以下を切り捨て ※文字列型になる
-    const playBackRate_String = playBackRate.toFixed(2)
+    const playBackRate_String: string = playBackRate.toFixed(2)
     playBackRate = parseFloat(playBackRate_String)// 文字列を数値に変換
     
     // // データをクライアントに返す
