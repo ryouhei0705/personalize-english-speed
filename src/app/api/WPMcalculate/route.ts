@@ -12,9 +12,9 @@ const corsHeaders = {
 export async function GET(req) {
     // クエリパラメータを取得
     // const url: string = req.nextUrl.searchParams.get('url'); // 動画のURL
-    const transcriptLength: number = req.nextUrl.searchParams.get('transcriptLength'); // 動画の文字数
-    const videoLength: number = req.nextUrl.searchParams.get('videoLength'); // 動画の長さ(秒)
-    const toeicScore: number = req.nextUrl.searchParams.get('toeic'); // TOEICスコア
+    const transcriptLength: number = Number(req.nextUrl.searchParams.get('transcriptLength')) || 0; // 動画の文字数
+    const videoLength: number = Number(req.nextUrl.searchParams.get('videoLength')) || 0; // 動画の長さ(秒)
+    const toeicScore: number = Number(req.nextUrl.searchParams.get('toeic')) || 0; // TOEICスコア
     
     // TOEICスコアから推奨WPM（Words Per Minute：1分あたりの単語数）を算出
     // 計算式：推奨WPM = TOEICスコア / 10 + 60

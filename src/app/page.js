@@ -5,6 +5,9 @@ import React, {useState} from "react";
 import { fetchVideoLength } from './youtube-iframe/duration';
 
 export default function Home() {
+  // 計算中を判定する
+  const [isCalculateRate, setIsCalculateRate] = useState(false);
+
   // エラーメッセージ
   const [errorMessage, setErrorMessage] = useState("");
   // TOEICスコア
@@ -33,6 +36,9 @@ export default function Home() {
 
   // ボタンを押すと適正発話速度と動画のURLを渡して，計算された倍率を受け取る
   const calculateRate = async () => {
+    // 計算を開始したことを記録
+    setIsCalculateRate(true);
+
     // エラーメッセージをリセット
     setErrorMessage(""); 
 
@@ -67,36 +73,49 @@ export default function Home() {
       }
 
       // 動画IDが取得できた場合、動画の文字起こしの文字数を取得，約10分以内である必要がある
-      const responseTranscriptLengthAPI = await fetch(`/api/youtube-transcript/?videoId=${videoId}`,{
+      const transcriptResponse = await fetch(`/api/youtube-transcript/?videoId=${videoId}`,{
         method: 'GET',
       })
       // ステータスコードで分岐する
-      if (responseTranscriptLengthAPI.status === 429) {
+      if (transcriptResponse.status === 429) {
         // apiの無料枠が終了した時
         setErrorMessage("本日のAI利用枠を超えました。明日また来てください");
         return; // ここで終了
       }
 
-      if (!responseTranscriptLengthAPI.ok) {
+      if (!transcriptResponse.ok) {
         // 429以外のエラー（500など）
         setErrorMessage("エラーが発生しました。時間を置いて試してください。");
         return;
       }
 
-      const newTranscriptLength = responseTranscriptLengthAPI.json().length;
-      setTranscriptLength(newTranscriptLength)//, setTranscript);
+      const transcriptData = await transcriptResponse.json();
+      const newTranscriptLength = transcriptData.length;
+      console.log("transcriptData in page", transcriptData)
+      setTranscriptLength(newTranscriptLength);
       
+      console.log("transcriptData in page", transcriptData)
       console.log("transcriptLength in page", newTranscriptLength)
 
       // クエリパラメータを作成
-      const params = new URLSearchParams({transcriptLength, videoLength, toeic}).toString();
+      const params = new URLSearchParams({
+        transcriptLength: newTranscriptLength, 
+        videoLength: newVideoLength, 
+        toeic: toeic
+      }).toString();
       const res = await fetch(`${API_URL}?${params}`,{method: 'GET'})
  
       // レスポンスをJSONとして取得
       const data = await res.json()
       setRate(data.rate)
+
+      // 計算を終了したことを記録
+      setIsCalculateRate(false);
     } catch (err) {
       alert(err)
+
+      // 計算を終了したことを記録
+      setIsCalculateRate(false);
     }
   }
 
@@ -108,6 +127,13 @@ export default function Home() {
       <button type="submit" onClick={calculateRate}>再生倍率を計算</button>
 
       <p>再生倍率：{rate}</p>
+
+      {/* 倍率を計算中であることを提示 */}
+      {isCalculateRate && (
+        <p style={{ color: 'red', fontWeight: 'bold' }}>
+          再生倍率を計算中です...(最大1分ほどかかります)
+        </p>
+      )}
 
       {/* エラーがあれば赤文字で表示 */}
       {errorMessage && (

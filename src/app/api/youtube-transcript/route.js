@@ -7,6 +7,9 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+// vercelのタイムアウト時間を延長，無料枠の上限は60s
+export const maxDuration = 60;
+
 //  文字起こしを取得
 export async function GET(request){
   // apiのurlからvideoIdを取得
@@ -43,8 +46,12 @@ export async function GET(request){
         length: getTranscriptLength(transcriptText)
       });
     } else {
-      console.log(data.error || '文字起こしの取得に失敗しました．');
-      // alert(data.error || '文字起こしの取得に失敗しました．');
+      console.error('Gemini API finished with reason:', response.candidates[0].finishReason);
+  
+      return NextResponse.json(
+        { error: 'GenerationFailed', message: '文字起こしの生成に失敗しました。' },
+        { status: 500 }
+  );
     }
   } catch (error) {
     console.error(error);
